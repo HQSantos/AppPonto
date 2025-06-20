@@ -2,20 +2,20 @@ Aplicativo local de registro de ponto desenvolvido em Python utilizando Django p
 
 A aplicação é executada localmente como um programa de computador, sem necessidade de navegador ou acesso à internet.
 
-Funcionalidades
-Cadastro e gerenciamento de registros de ponto
+<h2>Funcionalidades:</h2>
+Cadastro e gerenciamento de registros de ponto;<br>
+Interface gráfica via Tkinter;<br>
+Armazenamento local em banco SQLite;<br>
+Compilação para .exe via PyInstaller;<br>
 
-Interface gráfica via Tkinter
-Armazenamento local em banco SQLite
-Compilação para .exe via PyInstaller
-
-Requisitos de desenvolvimento:
-Python 3.12+
-.venv
-pip
-Ambiente virtual recomendado
+<h2>Requisitos de desenvolvimento:</h2>
+Python 3.12+<br>
+.venv<br>
+pip<br>
+Ambiente virtual recomendado<br><br>
 
 Instalação para desenvolvimento:
+```bash
 # Clone o repositório
 git clone https://github.com/seu-usuario/AppPonto.git
 cd AppPonto
@@ -24,16 +24,13 @@ python -m venv venv
 venv\Scripts\activate 
 # Instale as dependências
 pip install -r requirements.txt
-
-# Execute o sistema
-python appponto/main.py
-Gerar executável (.exe)
-Para compilar o sistema como um executável:
-pyinstaller appponto/main.spec
-O executável será gerado em:
-AppPonto/dist/AppPonto.exe
+```
+<br>Executar o sistema via console:```python appponto/main.py```<br>
+Para compilar o sistema como um executável:```pyinstaller appponto/main.spec```<br>
+O executável será gerado em: ```AppPonto/dist/AppPonto.exe``` <br>
 
 Estrutura do projeto:
+```
 AppPonto/
 │
 ├── appponto/            # Projeto Django
@@ -49,3 +46,4 @@ AppPonto/
 ├── main.spec            # Configuração do PyInstaller
 ├── requirements.txt
 └── README.md
+```
