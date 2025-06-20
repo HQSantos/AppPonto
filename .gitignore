@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller build folders
+build/
+dist/
+*.spec
+*.exe
+
+# Environments
+.venv/
+novo_venv/
+env/
+venv/
+
+
+ponto/migrations/__pycache__/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+
+# OS-specific files
+.DS_Store
+Thumbs.db
