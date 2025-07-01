@@ -402,9 +402,9 @@ class RegistroPontoScreen:
         values = self.tree.item(item, 'values')
         dia = int(values[0])  # O dia está na primeira coluna
 
-        tipo_ausencia = simpledialog.askstring("Marcar Ausência", "Digite 'folga' ou 'atestado':", parent=self.root)
-        if tipo_ausencia not in ['folga', 'atestado']:
-            messagebox.showerror("Erro", "Tipo inválido. Use 'folga' ou 'atestado'.")
+        tipo_ausencia = simpledialog.askstring("Marcar Ausência", "Digite 'folga', 'falta', 'feriado' ou 'atestado':", parent=self.root)
+        if tipo_ausencia not in ['folga', 'falta', 'feriado', 'atestado']:
+            messagebox.showerror("Erro", "Tipo inválido. Use 'folga', 'falta', 'feriado' ou 'atestado'.")
             return
 
         try:

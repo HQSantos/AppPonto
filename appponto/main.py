@@ -1,10 +1,18 @@
+import importlib
 import os
 import sys
 import django
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
 sys.path.append(BASE_DIR)
+
+DB_PATH = os.path.join(BASE_DIR, 'db.sqlite3')
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "appponto.settings")
+
+settings_module = importlib.import_module("appponto.settings")
+settings_module.DATABASES['default']['NAME'] = DB_PATH
+
 django.setup()
 
 from tkinter import Tk
