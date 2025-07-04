@@ -8,9 +8,9 @@ sys.path.append(BASE_DIR)
 
 DB_PATH = os.path.join(BASE_DIR, 'db.sqlite3')
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "appponto.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
-settings_module = importlib.import_module("appponto.settings")
+settings_module = importlib.import_module("settings")
 settings_module.DATABASES['default']['NAME'] = DB_PATH
 
 django.setup()

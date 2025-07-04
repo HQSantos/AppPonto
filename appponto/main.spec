@@ -4,25 +4,23 @@ from PyInstaller.utils.hooks import collect_all
 # Coletar dados e binários do tkinter
 tkinter_data = collect_all('tkinter')
 
-# Configurar dados
 datas = [
-    ('appponto', 'appponto'),
+    ('*.py', '.'),
 ] + tkinter_data[0]
 
-# Configurar binários
+# Binários do tkinter
 binaries = tkinter_data[1]
 
-# Configurar imports ocultos
+# Imports ocultos do tkinter
 hiddenimports = [
     'tkinter.messagebox',
     'tkinter.ttk',
     'tkinter.simpledialog',
 ] + tkinter_data[2]
 
-# Análise
 a = Analysis(
     ['main.py'],
-    pathex=['.', './appponto'],
+    pathex=['.'],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,
@@ -35,6 +33,7 @@ a = Analysis(
 )
 
 pyz = PYZ(a.pure)
+
 exe = EXE(
     pyz,
     a.scripts,
