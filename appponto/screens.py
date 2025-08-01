@@ -1,6 +1,8 @@
 import calendar
-from datetime import datetime, date
+import platform
+from datetime import datetime, date, timedelta
 import tkinter as tk
+import locale
 from tkinter import *
 from tkinter import messagebox, ttk, simpledialog
 from ponto.models import RegistroPonto
@@ -15,8 +17,14 @@ class RegistroPontoScreen:
         self.data_atual = datetime.today().replace(day=1)
         self.mes = self.data_atual.month
         self.ano = self.data_atual.year
-
+        self.preencher_saida = tk.BooleanVar(value=True)
         self.registro_selecionado = None
+
+        sistema = platform.system()
+        if sistema == 'Windows':
+            locale.setlocale(locale.LC_TIME, 'Portuguese_Brazil.1252')
+        else:
+            locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
 
 
         self.painel = PanedWindow(self.root, orient=HORIZONTAL, sashrelief=RAISED)
@@ -54,6 +62,7 @@ class RegistroPontoScreen:
         Label(self.frame_formulario, text="Entrada").grid(row=3, column=0, sticky=W)
         self.entry_entrada = Entry(self.frame_formulario, width=8)
         self.entry_entrada.grid(row=3, column=1)
+        self.entry_entrada.bind("<FocusOut>", self.verificar_valor_saida)
 
         Label(self.frame_formulario, text="Início Intervalo").grid(row=4, column=0, sticky=W)
         self.entry_inicio_intervalo = Entry(self.frame_formulario, width=8)
@@ -72,6 +81,8 @@ class RegistroPontoScreen:
         self.salvarbutton.bind("<Return>", lambda event: self.salvar())
 
         Button(self.frame_formulario, text="Exportar para Excel", command=self.exportar_excel).grid(row=8, column=0, columnspan=2, pady=5)
+
+        checkbox = tk.Checkbutton(self.frame_formulario, text="Preencher Saída", variable=self.preencher_saida, ).grid(row=9, column=0, columnspan=2, pady=5)
 
         campos_hora = [
             self.entry_entrada,
@@ -116,10 +127,10 @@ class RegistroPontoScreen:
         self.menu.add_command(label="Marcar Folga/Atestado", command=self.marcar_folga_atestado)
 
 
+
     def carregar_lista(self):
         for i in self.tree.get_children():
             self.tree.delete(i)
-
         self.label_mes.config(text=self.data_atual.strftime("%B/%Y").capitalize())
 
         dias_uteis = self.get_dias_uteis(self.ano, self.mes)
@@ -173,7 +184,6 @@ class RegistroPontoScreen:
 
 
 
-
     def salvar(self):
         try:
             dia = int(self.entry_dia.get())
@@ -215,6 +225,8 @@ class RegistroPontoScreen:
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao salvar: {e}")
 
+
+
     def get_dias_uteis(self, ano, mes):
         dias = []
         _, num_dias = calendar.monthrange(ano, mes)
@@ -245,6 +257,8 @@ class RegistroPontoScreen:
             self.mes += 1
         self.data_atual = self.data_atual.replace(year=self.ano, month=self.mes)
         self.carregar_lista()
+
+
 
     def menu_contexto(self, event):
         try:
@@ -329,8 +343,8 @@ class RegistroPontoScreen:
 
     def exportar_excel(self):
         try:
-            mes = self.mes_atual
-            ano = self.ano_atual
+            mes = self.mes
+            ano = self.ano
 
             registros = RegistroPonto.objects.filter(mes=mes, ano=ano).order_by('dia')
 
@@ -392,6 +406,8 @@ class RegistroPontoScreen:
         entry.delete(0, tk.END)
         entry.insert(0, valor)
 
+
+
     def marcar_folga_atestado(self):
         selected = self.tree.selection()
         if not selected:
@@ -425,3 +441,24 @@ class RegistroPontoScreen:
             registro.save()
 
         self.carregar_lista()
+
+
+
+    def verificar_valor_saida(self, event=None):
+        try:
+            if self.preencher_saida.get():
+                valor = self.entry_entrada.get().strip()
+                entrada = datetime.strptime(valor, "%H:%M")
+                entrada_padrao = datetime.strptime("08:00", "%H:%M")
+                saida_padrao = datetime.strptime("17:48", "%H:%M")
+
+                if entrada < entrada_padrao:
+                    minutos_adiantado = int((entrada_padrao - entrada).total_seconds() // 60)
+                    nova_saida = saida_padrao - timedelta(minutes=minutos_adiantado)
+                else:
+                    nova_saida = saida_padrao
+
+                self.entry_saida.delete(0, tk.END)
+                self.entry_saida.insert(0, nova_saida.strftime("%H:%M"))
+        except ValueError:
+            messagebox.showerror("Erro", "Formato de hora inválido. Use HH:MM.")
